@@ -1,24 +1,9 @@
 #import { Query, Connection } into Tezos from "w3://ens/tezos.web3api.eth"
 
-enum Network {
-  custom
-  mainnet
-}
-
-type CustomConnection {
-  connection: Tezos_Connection!
-  contractAddress: String!
-}
-
-type GetResponse {
-  params: String!
-}
-
-
 type Query {
-  getDataOf(
-    network: Network!
-  ): GetResponse!
-
+  getValue(
+    address: String!
+    connection: Tezos_Connection
+  ): String!
 }
 

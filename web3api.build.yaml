@@ -6,4 +6,4 @@ config:
   include:
     - ./package.json
     - ./src/query
-    - ./src/utils
+    - ./src/mutation

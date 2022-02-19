@@ -1,14 +1,40 @@
+import { Nullable } from "@web3api/wasm-as";
 import {
   Tezos_Mutation,
-  Tezos_TxOperation,
-  Input_callContractMethod
+  Tezos_CallContractMethodConfirmationResponse,
+  Input_increment,
+  Input_decrement
 } from "./w3";
 
-export function callContractMethod(input: Input_callContractMethod): Tezos_TxOperation {
-  return Tezos_Mutation.callContractMethod({
+/**
+ * Increases the storage value
+ * @param input 
+ * @returns 
+ */
+export function increment(input: Input_increment): Tezos_CallContractMethodConfirmationResponse {
+  return Tezos_Mutation.callContractMethodAndConfirmation({
     address: input.address,
-    method: input.method,
-    args: input.args,
-    connection: input.connection
+    method: 'increment',
+    args: "["+ input.value.toString() +"]",
+    connection: input.connection,
+    confirmations: <u32>5,
+    interval:  Nullable.fromValue<u32>(10),
+    timeout:  Nullable.fromValue<u32>(200),
+  })
+}
+/**
+ * Decreases the storage value
+ * @param input 
+ * @returns 
+ */
+export function decrement(input: Input_decrement): Tezos_CallContractMethodConfirmationResponse {
+  return Tezos_Mutation.callContractMethodAndConfirmation({
+    address: input.address,
+    method: 'decrement',
+    args: "["+ input.value.toString() +"]",
+    connection: input.connection,
+    confirmations: <u32>5,
+    interval:  Nullable.fromValue<u32>(10),
+    timeout:  Nullable.fromValue<u32>(200),
   })
 }
