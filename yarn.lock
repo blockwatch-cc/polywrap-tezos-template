@@ -301,10 +301,10 @@
     "@web3api/core-js" "0.0.1-prealpha.61"
     axios "0.25.0"
 
-"@blockwatch-cc/tezos-test-env@0.0.1-prealpha.62":
-  version "0.0.1-prealpha.62"
-  resolved "https://registry.yarnpkg.com/@blockwatch-cc/tezos-test-env/-/tezos-test-env-0.0.1-prealpha.62.tgz#d7e949798cd83a986533e0f461a84b03f085a523"
-  integrity sha512-9cgtccazflDYxHilQXTEHq4/IFjayHDyfEXpl2W5W6ZZ4XAWtoc19Ffli8dGwcrJs++0GwHCUbO+tzMjpq582w==
+"@blockwatch-cc/tezos-test-env@0.0.1-prealpha.63":
+  version "0.0.1-prealpha.63"
+  resolved "https://registry.yarnpkg.com/@blockwatch-cc/tezos-test-env/-/tezos-test-env-0.0.1-prealpha.63.tgz#91da3f98672588f89cd8f06230c0e50388ded82e"
+  integrity sha512-DgA7cieV+6uKWfM5yjBG4sn7XbTF4f5P3lkSHQstys+FlkposmH8DtlK5JSevN67t08weUMzcw5a4Qmf6+38qQ==
   dependencies:
     "@taquito/signer" "11.2.0"
     "@taquito/taquito" "11.2.0"
