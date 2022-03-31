@@ -6,4 +6,3 @@ type Query {
     connection: Tezos_Connection
   ): String!
 }
-

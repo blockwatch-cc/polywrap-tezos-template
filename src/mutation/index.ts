@@ -15,11 +15,11 @@ export function increment(input: Input_increment): Tezos_CallContractMethodConfi
   return Tezos_Mutation.callContractMethodAndConfirmation({
     address: input.address,
     method: 'increment',
-    args: "["+ input.value.toString() +"]",
+    args: "[" + input.value.toString() + "]",
     connection: input.connection,
-    confirmations: <u32>5,
-    interval:  Nullable.fromValue<u32>(10),
-    timeout:  Nullable.fromValue<u32>(200),
+    confirmations: <u32>1,
+    timeout: Nullable.fromValue<u32>(200),
+    params: null
   })
 }
 /**
@@ -31,10 +31,10 @@ export function decrement(input: Input_decrement): Tezos_CallContractMethodConfi
   return Tezos_Mutation.callContractMethodAndConfirmation({
     address: input.address,
     method: 'decrement',
-    args: "["+ input.value.toString() +"]",
+    args: "[" + input.value.toString() + "]",
     connection: input.connection,
-    confirmations: <u32>5,
-    interval:  Nullable.fromValue<u32>(10),
-    timeout:  Nullable.fromValue<u32>(200),
+    confirmations: <u32>1,
+    timeout: Nullable.fromValue<u32>(200),
+    params: null
   })
 }

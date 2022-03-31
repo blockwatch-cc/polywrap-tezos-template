@@ -2,10 +2,10 @@ import path from "path"
 import { Web3ApiClient } from "@web3api/client-js"
 import { ensPlugin } from "@web3api/ens-plugin-js"
 import { ipfsPlugin } from "@web3api/ipfs-plugin-js"
-import { tezosPlugin, InMemorySigner } from "@web3api/tezos-plugin-js"
+import { tezosPlugin, InMemorySigner } from "@blockwatch-cc/tezos-plugin-js"
 import { ethereumPlugin  } from "@web3api/ethereum-plugin-js"
 import { buildAndDeployApi, initTestEnvironment, stopTestEnvironment } from "@web3api/test-env-js"
-import { up, down, deployContract, Account, DeployResponse, Node } from "@web3api/tezos-test-env"
+import { up, down, deployContract, Account, DeployResponse, Node } from "@blockwatch-cc/tezos-test-env"
 
 import { SIMPLE_CONTRACT, SIMPLE_CONTRACT_STORAGE } from "./utils/contract"
 
@@ -199,7 +199,7 @@ describe("e2e", () => {
       expect(initResponse.data?.getValue).toBeDefined()
       initialStorageValue = parseInt(initResponse.data?.getValue!)
       // Add initial storage by 5
-      const response =  await client.query<{ increment: string }>({
+      const response =  await client.query<{ decrement: string }>({
         uri: tezosUri,
         query: `
           mutation {
@@ -220,7 +220,7 @@ describe("e2e", () => {
       })
       expect(response.errors).toBeUndefined()
       expect(response.data).toBeDefined()
-      expect(response.data?.increment).toBeDefined()
+      expect(response.data?.decrement).toBeDefined()
       // assert final storage value
       const finalResponse =  await client.query<{ getValue: string }>({
         uri: tezosUri,
