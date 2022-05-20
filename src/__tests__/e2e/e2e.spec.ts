@@ -2,7 +2,7 @@ import path from "path"
 import { Web3ApiClient } from "@web3api/client-js"
 import { ensPlugin } from "@web3api/ens-plugin-js"
 import { ipfsPlugin } from "@web3api/ipfs-plugin-js"
-import { tezosPlugin, InMemorySigner } from "@blockwatch-cc/tezos-plugin-js"
+import { tezosPlugin, InMemorySigner  } from "@blockwatch-cc/tezos-plugin-js"
 import { ethereumPlugin  } from "@web3api/ethereum-plugin-js"
 import { buildAndDeployApi, initTestEnvironment, stopTestEnvironment } from "@web3api/test-env-js"
 import { up, down, deployContract, Account, DeployResponse, Node } from "@blockwatch-cc/tezos-test-env"
@@ -20,10 +20,17 @@ describe("e2e", () => {
 
   beforeAll(async () => {
     // setup ethereum, ipfs
-    const { ensAddress, ethereum, ipfs } = await initTestEnvironment();
+    const testEnv = await initTestEnvironment();
     // build and deploy wrapper source
     const apiPath = path.join(__dirname, "../../../");
-    const api = await buildAndDeployApi(apiPath, ipfs, ensAddress)
+    const api = await buildAndDeployApi({
+      apiAbsPath: apiPath,
+      ipfsProvider: testEnv.ipfs,
+      ensRegistryAddress: testEnv.ensAddress,
+      ensRegistrarAddress: testEnv.registrarAddress,
+      ensResolverAddress: testEnv.resolverAddress,
+      ethereumProvider: testEnv.ethereum,
+    })
     // setup tezos node
     const response = await up()
     // initialise
@@ -32,6 +39,8 @@ describe("e2e", () => {
     accounts = response.accounts
     // deploy contract to tezos node 
     deployResponse = await deployContract(accounts[0], { code: SIMPLE_CONTRACT, storage: SIMPLE_CONTRACT_STORAGE }, 2)
+    // get signer
+    const signer = await InMemorySigner.fromSecretKey(accounts[0].secretKey)
     // initialize client
     client = new Web3ApiClient({
       plugins: [
@@ -44,7 +53,7 @@ describe("e2e", () => {
               },
               testnet: {
                 provider: node.url,
-                signer: await InMemorySigner.fromSecretKey(accounts[0].secretKey)
+                signer,
               }
             },
             defaultNetwork: "testnet"
@@ -52,18 +61,18 @@ describe("e2e", () => {
         },
         {
           uri: "w3://ens/ipfs.web3api.eth",
-          plugin: ipfsPlugin({ provider: ipfs }),
+          plugin: ipfsPlugin({ provider: testEnv.ipfs }),
       },
       {
           uri: "w3://ens/ens.web3api.eth",
-          plugin: ensPlugin({ addresses: { testnet: ensAddress } }),
+          plugin: ensPlugin({ query: { addresses: { testnet: testEnv.ensAddress } } }),
       },
       {
         uri: "w3://ens/ethereum.web3api.eth",
         plugin: ethereumPlugin({
             networks: {
                 testnet: {
-                    provider: ethereum
+                    provider: testEnv.ethereum
                 },
             },
             defaultNetwork: "testnet"

@@ -20,7 +20,7 @@ export function increment(input: Input_increment): Tezos_CallContractMethodConfi
     confirmations: <u32>1,
     timeout: Nullable.fromValue<u32>(200),
     params: null
-  })
+  }).unwrap()
 }
 /**
  * Decreases the storage value
@@ -36,5 +36,5 @@ export function decrement(input: Input_decrement): Tezos_CallContractMethodConfi
     confirmations: <u32>1,
     timeout: Nullable.fromValue<u32>(200),
     params: null
-  })
+  }).unwrap()
 }

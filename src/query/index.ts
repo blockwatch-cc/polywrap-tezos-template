@@ -14,5 +14,5 @@ export function getValue(input: Input_getValue): string {
     connection: input.connection,
     key: '',
     field: '',
-  });
+  }).unwrap();
 }
