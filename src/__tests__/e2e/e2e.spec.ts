@@ -1,40 +1,29 @@
 import path from "path"
-import { Web3ApiClient } from "@web3api/client-js"
-import { ensPlugin } from "@web3api/ens-plugin-js"
-import { ipfsPlugin } from "@web3api/ipfs-plugin-js"
-import { tezosPlugin, InMemorySigner  } from "@blockwatch-cc/tezos-plugin-js"
-import { ethereumPlugin  } from "@web3api/ethereum-plugin-js"
-import { buildAndDeployApi, initTestEnvironment, stopTestEnvironment } from "@web3api/test-env-js"
+import { buildWrapper } from "@polywrap/test-env-js"
+import { tezosPlugin  } from "@blockwatch-cc/tezos-plugin-js"
+import { InMemorySigner } from "@taquito/signer";
+import { PolywrapClient } from "@polywrap/client-js"
 import { up, down, deployContract, Account, DeployResponse, Node } from "@blockwatch-cc/tezos-test-env"
 
 import { SIMPLE_CONTRACT, SIMPLE_CONTRACT_STORAGE } from "./utils/contract"
 
-jest.setTimeout(150000)
+jest.setTimeout(150000);
 
 describe("e2e", () => {
-  let client: Web3ApiClient;
+  let client: PolywrapClient;
   let tezosUri: string;
   let accounts: Account[];
   let node: Node;
   let deployResponse: DeployResponse;
 
   beforeAll(async () => {
-    // setup ethereum, ipfs
-    const testEnv = await initTestEnvironment();
     // build and deploy wrapper source
-    const apiPath = path.join(__dirname, "../../../");
-    const api = await buildAndDeployApi({
-      apiAbsPath: apiPath,
-      ipfsProvider: testEnv.ipfs,
-      ensRegistryAddress: testEnv.ensAddress,
-      ensRegistrarAddress: testEnv.registrarAddress,
-      ensResolverAddress: testEnv.resolverAddress,
-      ethereumProvider: testEnv.ethereum,
-    })
+    const apiPath = path.join(__dirname, "/../../../");
+    await buildWrapper(apiPath);
+    tezosUri = `fs/${apiPath}/build`;
     // setup tezos node
     const response = await up()
     // initialise
-    tezosUri = `ens/testnet/${api.ensDomain}`;
     node = response.node
     accounts = response.accounts
     // deploy contract to tezos node 
@@ -42,10 +31,10 @@ describe("e2e", () => {
     // get signer
     const signer = await InMemorySigner.fromSecretKey(accounts[0].secretKey)
     // initialize client
-    client = new Web3ApiClient({
+    client = new PolywrapClient({
       plugins: [
         {
-          uri: "w3://ens/tezos.web3api.eth",
+          uri: "wrap://ens/tezos.polywrap.eth",
           plugin: tezosPlugin({
             networks: {
               mainnet: {
@@ -58,31 +47,12 @@ describe("e2e", () => {
             },
             defaultNetwork: "testnet"
           }),
-        },
-        {
-          uri: "w3://ens/ipfs.web3api.eth",
-          plugin: ipfsPlugin({ provider: testEnv.ipfs }),
-      },
-      {
-          uri: "w3://ens/ens.web3api.eth",
-          plugin: ensPlugin({ query: { addresses: { testnet: testEnv.ensAddress } } }),
-      },
-      {
-        uri: "w3://ens/ethereum.web3api.eth",
-        plugin: ethereumPlugin({
-            networks: {
-                testnet: {
-                    provider: testEnv.ethereum
-                },
-            },
-            defaultNetwork: "testnet"
-        }),
-      }],
+        }
+      ],
     });
   })
 
   afterAll(async () => {
-    await stopTestEnvironment()
     await down()
   })
    

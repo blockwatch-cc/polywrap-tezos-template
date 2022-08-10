@@ -1,8 +1,0 @@
-#import { Query, Connection } into Tezos from "w3://ens/tezos.web3api.eth"
-
-type Query {
-  getValue(
-    address: String!
-    connection: Tezos_Connection
-  ): String!
-}

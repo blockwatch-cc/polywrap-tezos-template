@@ -1,0 +1,21 @@
+#import { Module, Connection, CallContractMethodConfirmationResponse } into Tezos from "wrap://ens/tezos.polywrap.eth"
+
+type Module {
+  getValue(
+    address: String!
+    connection: Tezos_Connection
+  ): String!
+  
+  increment(
+      address: String!
+      value: UInt32!
+      connection: Tezos_Connection
+  ): Tezos_CallContractMethodConfirmationResponse!
+
+  decrement(
+      address: String!
+      value: UInt32!
+      connection: Tezos_Connection
+  ): Tezos_CallContractMethodConfirmationResponse!
+}
+

@@ -1,0 +1,15 @@
+format: 0.1.0
+stages:
+  ipfs_deploy:
+    package: ipfs
+    uri: fs/./build
+    config:
+      gatewayUri: https://ipfs.wrappers.io
+  ens_deploy:
+    package: ens
+    depends_on: ipfs_deploy
+    config:
+      domainName: tezos_template.polywrap.eth
+      provider: 'https://rinkeby.infura.io/v3/d119148113c047ca90f0311ed729c466'
+      ensRegistryAddress: ''
+      privateKey: ''
